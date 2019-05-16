@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tree.dao.TreeMeasurementMapper" >
+  <resultMap id="BaseResultMap" type="tree.model.TreeMeasurement" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="diameter_calculate" property="diameterCalculate" jdbcType="DOUBLE" />
+    <result column="diameter_measure" property="diameterMeasure" jdbcType="DOUBLE" />
+    <result column="diameter_correct" property="diameterCorrect" jdbcType="INTEGER" />
+    <result column="dots_calculate" property="dotsCalculate" jdbcType="INTEGER" />
+    <result column="dots_correct" property="dotsCorrect" jdbcType="INTEGER" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="times_no_dots" property="timesNoDots" jdbcType="INTEGER" />
+    <result column="times_no_treecode" property="timesNoTreecode" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="tree.model.TreeMeasurementWithBLOBs" extends="BaseResultMap" >
+    <result column="pic" property="pic" jdbcType="LONGVARCHAR" />
+    <result column="tree_code" property="treeCode" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, time, diameter_calculate, diameter_measure, diameter_correct, dots_calculate, 
+    dots_correct,user_code,times_no_dots,times_no_treecode
+  </sql>
+  <sql id="Blob_Column_List" >
+    pic, tree_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tree_measurement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByTreeCode" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tree_measurement
+    where tree_code = #{treeCode,jdbcType=INTEGER}
+  </select>
+  <select id="selectSingleTreeStartAndEnd" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tree_measurement t1
+    where (t1.id = (select max(id) from  tree_measurement t2 where t2.tree_code = #{treeCode,jdbcType=INTEGER}))
+    or (t1.id = (select min(id) from  tree_measurement t2 where t2.tree_code = #{treeCode,jdbcType=INTEGER}));
+  </select>
+  <select id="selectByTime" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tree_measurement
+    where time BETWEEN #{0} AND date_add(#{1},interval 1 day)
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tree_measurement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tree.model.TreeMeasurementWithBLOBs" >
+    insert into tree_measurement (id, time, diameter_calculate, 
+      diameter_measure, diameter_correct, dots_calculate, 
+      dots_correct, pic, tree_code,user_code,times_no_dots,times_no_treecode
+      )
+    values (#{id,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, #{diameterCalculate,jdbcType=DOUBLE}, 
+      #{diameterMeasure,jdbcType=DOUBLE}, #{diameterCorrect,jdbcType=INTEGER}, #{dotsCalculate,jdbcType=INTEGER}, 
+      #{dotsCorrect,jdbcType=INTEGER}, #{pic,jdbcType=LONGVARCHAR}, #{treeCode,jdbcType=LONGVARCHAR},
+      #{userCode,jdbcType=VARCHAR},#{timesNoDots,jdbcType=INTEGER},#{timesNoTreecode,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="tree.model.TreeMeasurementWithBLOBs" >
+    insert into tree_measurement
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="diameterCalculate != null" >
+        diameter_calculate,
+      </if>
+      <if test="diameterMeasure != null" >
+        diameter_measure,
+      </if>
+      <if test="diameterCorrect != null" >
+        diameter_correct,
+      </if>
+      <if test="dotsCalculate != null" >
+        dots_calculate,
+      </if>
+      <if test="dotsCorrect != null" >
+        dots_correct,
+      </if>
+      <if test="pic != null" >
+        pic,
+      </if>
+      <if test="treeCode != null" >
+        tree_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diameterCalculate != null" >
+        #{diameterCalculate,jdbcType=DOUBLE},
+      </if>
+      <if test="diameterMeasure != null" >
+        #{diameterMeasure,jdbcType=DOUBLE},
+      </if>
+      <if test="diameterCorrect != null" >
+        #{diameterCorrect,jdbcType=INTEGER},
+      </if>
+      <if test="dotsCalculate != null" >
+        #{dotsCalculate,jdbcType=INTEGER},
+      </if>
+      <if test="dotsCorrect != null" >
+        #{dotsCorrect,jdbcType=INTEGER},
+      </if>
+      <if test="pic != null" >
+        #{pic,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="treeCode != null" >
+        #{treeCode,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tree.model.TreeMeasurementWithBLOBs" >
+    update tree_measurement
+    <set >
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diameterCalculate != null" >
+        diameter_calculate = #{diameterCalculate,jdbcType=DOUBLE},
+      </if>
+      <if test="diameterMeasure != null" >
+        diameter_measure = #{diameterMeasure,jdbcType=DOUBLE},
+      </if>
+      <if test="diameterCorrect != null" >
+        diameter_correct = #{diameterCorrect,jdbcType=INTEGER},
+      </if>
+      <if test="dotsCalculate != null" >
+        dots_calculate = #{dotsCalculate,jdbcType=INTEGER},
+      </if>
+      <if test="dotsCorrect != null" >
+        dots_correct = #{dotsCorrect,jdbcType=INTEGER},
+      </if>
+      <if test="pic != null" >
+        pic = #{pic,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="treeCode != null" >
+        tree_code = #{treeCode,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="tree.model.TreeMeasurementWithBLOBs" >
+    update tree_measurement
+    set time = #{time,jdbcType=TIMESTAMP},
+      diameter_calculate = #{diameterCalculate,jdbcType=DOUBLE},
+      diameter_measure = #{diameterMeasure,jdbcType=DOUBLE},
+      diameter_correct = #{diameterCorrect,jdbcType=INTEGER},
+      dots_calculate = #{dotsCalculate,jdbcType=INTEGER},
+      dots_correct = #{dotsCorrect,jdbcType=INTEGER},
+      pic = #{pic,jdbcType=LONGVARCHAR},
+      tree_code = #{treeCode,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tree.model.TreeMeasurement" >
+    update tree_measurement
+    set time = #{time,jdbcType=TIMESTAMP},
+      diameter_calculate = #{diameterCalculate,jdbcType=DOUBLE},
+      diameter_measure = #{diameterMeasure,jdbcType=DOUBLE},
+      diameter_correct = #{diameterCorrect,jdbcType=INTEGER},
+      dots_calculate = #{dotsCalculate,jdbcType=INTEGER},
+      dots_correct = #{dotsCorrect,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <resultMap id="resultMapVO" type="tree.vo.TreeMeasurementVO" >
+    <id column="t_id" property="id" jdbcType="INTEGER" />
+    <result column="t_time" property="time" jdbcType="TIMESTAMP" />
+    <result column="t_diameter_calculate" property="diameterCalculate" jdbcType="DOUBLE" />
+    <result column="t_diameter_measure" property="diameterMeasure" jdbcType="DOUBLE" />
+    <result column="t_diameter_correct" property="diameterCorrect" jdbcType="DOUBLE" />
+    <result column="pic" property="pic" jdbcType="LONGVARCHAR" />
+    <result column="treeCode" property="treeCode" jdbcType="LONGVARCHAR" />
+    <association property="dotsCalculate" column="dots_calculate" javaType="tree.model.TreeMeasurementDots">
+      <id property="id" column="d_id"/>
+      <result property="upx" column="upx"/>
+      <result property="upy" column="upy"/>
+      <result property="downx" column="downx"/>
+      <result property="downy" column="downy"/>
+      <result property="leftx" column="leftx"/>
+      <result property="lefty" column="lefty"/>
+      <result property="rightx" column="rightx"/>
+      <result property="righty" column="righty"/>
+      <result property="angleL" column="angleL"/>
+      <result property="angleR" column="angleR"/>
+    </association>
+    <association property="dotsCorrect" column="dots_correct" javaType="tree.model.TreeMeasurementDots">
+      <id property="id" column="d_id2"/>
+      <result property="upx" column="upx2"/>
+      <result property="upy" column="upy2"/>
+      <result property="downx" column="downx2"/>
+      <result property="downy" column="downy2"/>
+      <result property="leftx" column="leftx2"/>
+      <result property="lefty" column="lefty2"/>
+      <result property="rightx" column="rightx2"/>
+      <result property="righty" column="righty2"/>
+      <result property="angleL" column="angleL2"/>
+      <result property="angleR" column="angleR2"/>
+    </association>
+  </resultMap>
+  <select id="selectVOByTime" resultMap="resultMapVO">
+    SELECT t.id as t_id, t.time as t_time,t.diameter_calculate as t_diameter_calculate,
+       t.diameter_measure as t_diameter_measure,t.diameter_correct as t_diameter_correct,
+       t.pic as pic,t.tree_code as treeCode,
+       d.id as d_id,d.upx as upx,d.upy as upy,d.downx as downx,d.downy as downy,
+       d.leftx as leftx, d.lefty as lefty,d.rightx as rightx,d.righty as righty,
+       d.angleL as angleL,d.angleR as angleR,
+       d2.id as d_id2,d2.upx as upx2,d2.upy as upy2,d2.downx as downx2,d2.downy as downy2,
+       d2.leftx as leftx2, d2.lefty as lefty2,d2.rightx as rightx2,d2.righty as righty2,
+       d2.angleL as angleL2,d2.angleR as angleR2
+    from tree_measurement t
+    LEFT JOIN tree_measurement_dots d on t.dots_calculate = d.id
+    LEFT JOIN tree_measurement_dots d2 on t.dots_correct = d2.id
+    where t.time between #{0} and #{1}
+    order by t.id desc
+  </select>
+  <select id="selectVOByTreeCode" resultMap="resultMapVO" parameterType="java.lang.String">
+    SELECT t.id as t_id, t.time as t_time,t.diameter_calculate as t_diameter_calculate,
+       t.diameter_measure as t_diameter_measure,t.diameter_correct as t_diameter_correct,
+       t.pic as pic,t.tree_code as treeCode,
+       d.id as d_id,d.upx as upx,d.upy as upy,d.downx as downx,d.downy as downy,
+       d.leftx as leftx, d.lefty as lefty,d.rightx as rightx,d.righty as righty,
+       d.angleL as angleL,d.angleR as angleR,
+       d2.id as d_id2,d2.upx as upx2,d2.upy as upy2,d2.downx as downx2,d2.downy as downy2,
+       d2.leftx as leftx2, d2.lefty as lefty2,d2.rightx as rightx,d2.righty as righty2,
+       d2.angleL as angleL2,d2.angleR as angleR2
+    from tree_measurement t
+    LEFT JOIN tree_measurement_dots d on t.dots_calculate = d.id
+    LEFT JOIN tree_measurement_dots d2 on t.dots_correct = d2.id
+    where t.tree_code = #{0}
+    order by t.id desc
+  </select>
+  <select id="selectVOAll" resultMap="resultMapVO">
+    SELECT t.id as t_id, t.time as t_time,t.diameter_calculate as t_diameter_calculate,
+       t.diameter_measure as t_diameter_measure,t.diameter_correct as t_diameter_correct,
+       t.pic as pic,t.tree_code as treeCode,
+       d.id as d_id,d.upx as upx,d.upy as upy,d.downx as downx,d.downy as downy,
+       d.leftx as leftx, d.lefty as lefty,d.rightx as rightx,d.righty as righty,
+       d.angleL as angleL,d.angleR as angleR,
+       d2.id as d_id2,d2.upx as upx2,d2.upy as upy2,d2.downx as downx2,d2.downy as downy2,
+       d2.leftx as leftx2, d2.lefty as lefty2,d2.rightx as rightx2,d2.righty as righty2,
+       d2.angleL as angleL2,d2.angleR as angleR2
+    from tree_measurement t
+    LEFT JOIN tree_measurement_dots d on t.dots_calculate = d.id
+    LEFT JOIN tree_measurement_dots d2 on t.dots_correct = d2.id
+    order by t.id desc;
+  </select>
+  <select id="getAllTreeCode" resultType="java.lang.String">
+    select tree_code from tree.tree_measurement group by tree_code;
+  </select>
+
+</mapper>

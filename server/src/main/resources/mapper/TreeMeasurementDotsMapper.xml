@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tree.dao.TreeMeasurementDotsMapper" >
+  <resultMap id="BaseResultMap" type="tree.model.TreeMeasurementDots" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="upX" property="upx" jdbcType="INTEGER" />
+    <result column="upY" property="upy" jdbcType="INTEGER" />
+    <result column="downX" property="downx" jdbcType="INTEGER" />
+    <result column="downY" property="downy" jdbcType="INTEGER" />
+    <result column="leftX" property="leftx" jdbcType="INTEGER" />
+    <result column="leftY" property="lefty" jdbcType="INTEGER" />
+    <result column="rightX" property="rightx" jdbcType="INTEGER" />
+    <result column="rightY" property="righty" jdbcType="INTEGER" />
+    <result column="angleL" property="angleL" jdbcType="DOUBLE" />
+    <result column="angleR" property="angleR" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, upX, upY, downX, downY, leftX, leftY, rightX, rightY, angleL, angleR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tree_measurement_dots
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tree_measurement_dots
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="tree.model.TreeMeasurementDots" useGeneratedKeys="true" keyProperty="id">
+    insert into tree_measurement_dots (id, upX, upY, 
+      downX, downY, leftX, 
+      leftY, rightX, rightY, 
+      angleL, angleR)
+    values (#{id,jdbcType=INTEGER}, #{upx,jdbcType=INTEGER}, #{upy,jdbcType=INTEGER}, 
+      #{downx,jdbcType=INTEGER}, #{downy,jdbcType=INTEGER}, #{leftx,jdbcType=INTEGER}, 
+      #{lefty,jdbcType=INTEGER}, #{rightx,jdbcType=INTEGER}, #{righty,jdbcType=INTEGER}, 
+      #{anglel,jdbcType=DOUBLE}, #{angler,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="tree.model.TreeMeasurementDots" >
+    insert into tree_measurement_dots
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="upx != null" >
+        upX,
+      </if>
+      <if test="upy != null" >
+        upY,
+      </if>
+      <if test="downx != null" >
+        downX,
+      </if>
+      <if test="downy != null" >
+        downY,
+      </if>
+      <if test="leftx != null" >
+        leftX,
+      </if>
+      <if test="lefty != null" >
+        leftY,
+      </if>
+      <if test="rightx != null" >
+        rightX,
+      </if>
+      <if test="righty != null" >
+        rightY,
+      </if>
+      <if test="anglel != null" >
+        angleL,
+      </if>
+      <if test="angler != null" >
+        angleR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="upx != null" >
+        #{upx,jdbcType=INTEGER},
+      </if>
+      <if test="upy != null" >
+        #{upy,jdbcType=INTEGER},
+      </if>
+      <if test="downx != null" >
+        #{downx,jdbcType=INTEGER},
+      </if>
+      <if test="downy != null" >
+        #{downy,jdbcType=INTEGER},
+      </if>
+      <if test="leftx != null" >
+        #{leftx,jdbcType=INTEGER},
+      </if>
+      <if test="lefty != null" >
+        #{lefty,jdbcType=INTEGER},
+      </if>
+      <if test="rightx != null" >
+        #{rightx,jdbcType=INTEGER},
+      </if>
+      <if test="righty != null" >
+        #{righty,jdbcType=INTEGER},
+      </if>
+      <if test="anglel != null" >
+        #{anglel,jdbcType=DOUBLE},
+      </if>
+      <if test="angler != null" >
+        #{angler,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="tree.model.TreeMeasurementDots" >
+    update tree_measurement_dots
+    <set >
+      <if test="upx != null" >
+        upX = #{upx,jdbcType=INTEGER},
+      </if>
+      <if test="upy != null" >
+        upY = #{upy,jdbcType=INTEGER},
+      </if>
+      <if test="downx != null" >
+        downX = #{downx,jdbcType=INTEGER},
+      </if>
+      <if test="downy != null" >
+        downY = #{downy,jdbcType=INTEGER},
+      </if>
+      <if test="leftx != null" >
+        leftX = #{leftx,jdbcType=INTEGER},
+      </if>
+      <if test="lefty != null" >
+        leftY = #{lefty,jdbcType=INTEGER},
+      </if>
+      <if test="rightx != null" >
+        rightX = #{rightx,jdbcType=INTEGER},
+      </if>
+      <if test="righty != null" >
+        rightY = #{righty,jdbcType=INTEGER},
+      </if>
+      <if test="anglel != null" >
+        angleL = #{anglel,jdbcType=DOUBLE},
+      </if>
+      <if test="angler != null" >
+        angleR = #{angler,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="tree.model.TreeMeasurementDots" >
+    update tree_measurement_dots
+    set upX = #{upx,jdbcType=INTEGER},
+      upY = #{upy,jdbcType=INTEGER},
+      downX = #{downx,jdbcType=INTEGER},
+      downY = #{downy,jdbcType=INTEGER},
+      leftX = #{leftx,jdbcType=INTEGER},
+      leftY = #{lefty,jdbcType=INTEGER},
+      rightX = #{rightx,jdbcType=INTEGER},
+      rightY = #{righty,jdbcType=INTEGER},
+      angleL = #{anglel,jdbcType=DOUBLE},
+      angleR = #{angler,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
